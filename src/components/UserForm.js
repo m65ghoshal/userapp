@@ -27,10 +27,13 @@ class UserForm extends Component {
             phone: '',
             password: '',
             confirmPassword: '',
-            isError: false,
+            isError: true,
             errorMsg: [],
             helperText: [],
             errorText: '',
+            isEmailError: true,
+            isPwdError: true,
+            isCnfPwdError: true,
         }
     }
 
@@ -74,34 +77,36 @@ class UserForm extends Component {
                 let isValid =  re.test(value);
                 if(isValid){
                     _state.helperText[name] = '';
-                    tempError = false;
+                    _state.isEmailError = false;
                 } else {
                     _state.helperText[name] = 'Enter valid email';
-                    tempError = true;
+                    _state.isEmailError = true;
                 }
             }
         }
         if(name === 'password'){
             if(value.length < 6){
                 _state.helperText['password'] = 'Password must be more than 6 character';
-                tempError = true;
+                _state.isPwdError = true;
             } else {
                 _state.helperText['password'] = '';
-                tempError = false;
+                _state.isPwdError = false;
             }
         }
         if(name === 'confirmPassword'){
             if(value != _state.password){
                 _state.helperText['confirmPassword'] = 'Password must be same';
-                tempError = true;
+                _state.isCnfPwdError = true;
             } else {
                 _state.helperText['confirmPassword'] = '';
-                tempError = false;
+                _state.isCnfPwdError = false;
             }
         }
         let isError = _state.isError;
-        if(isError || tempError){
-            _state.isError = tempError;
+        if(!_state.isEmailError && !_state.isPwdError && !_state.isCnfPwdError){
+            _state.isError = false;
+        } else {
+            _state.isError = true;
         }
         this.setState({ _state });
     }
@@ -209,6 +214,7 @@ class UserForm extends Component {
                         style={{ width: '300px', marginLeft: 15, marginRight: 15 }}
                     />
                     </div>
+                    
                 </form>
             </div>
         );
